@@ -21,6 +21,8 @@ fi
 #apt-get install -y yubikey-personalization-gui yubikey-neo-manager yubikey-personalization pcscd scdaemon gnupg2 pcsc-tools paperkey qrencode
 
 # Clean & prepare the workspace
+mkdir keys
+mkdir generated
 rm keys/*
 rm generated/*
 gpg2 --no-permission-warning --version > /dev/null
@@ -105,11 +107,6 @@ chmod +x generated/genrevoke.exp
 
 # QR-encode the revocation certificates to QR as well, cause why not:
 ls -al ./keys/ | grep \.asc | grep -v master | awk ' { system("cat ./keys/" $9 " | qrencode -o ./keys/" $9 ".png") } '
-
-# Create the subkeys with expect
-#cat files/expect_gensubkeys.tpl | sed "s/CERTID/$MASTER/g" > generated/gensubkeys.exp
-#chmod +x generated/gensubkeys.exp
-#./generated/gensubkeys.exp
 
 # Set the file permissions to what they need to be.
 chown -R $SUSER:$SUSER ./generated
